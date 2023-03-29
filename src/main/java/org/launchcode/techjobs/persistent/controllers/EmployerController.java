@@ -1,6 +1,9 @@
 package org.launchcode.techjobs.persistent.controllers;
 
 import org.launchcode.techjobs.persistent.models.Employer;
+import org.launchcode.techjobs.persistent.models.Skill;
+import org.launchcode.techjobs.persistent.models.data.EmployerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -13,10 +16,21 @@ import java.util.Optional;
 @RequestMapping("employers")
 public class EmployerController {
 
+    @Autowired
+    private EmployerRepository employerRepository;
+
+    @GetMapping("")
+    public String index(Model model) {
+        Iterable<Employer> employers;
+        employers = employerRepository.findAll();
+        model.addAttribute("title", "All Employers");
+        model.addAttribute("employers", employers);
+        return "employers/index";
+    }
 
     @GetMapping("add")
     public String displayAddEmployerForm(Model model) {
-        model.addAttribute(new Employer());
+        model.addAttribute("employer", new Employer());
         return "employers/add";
     }
 
@@ -27,14 +41,14 @@ public class EmployerController {
         if (errors.hasErrors()) {
             return "employers/add";
         }
-
+        employerRepository.save(newEmployer);
         return "redirect:";
     }
 
     @GetMapping("view/{employerId}")
     public String displayViewEmployer(Model model, @PathVariable int employerId) {
 
-        Optional optEmployer = null;
+        Optional optEmployer = employerRepository.findById(employerId);
         if (optEmployer.isPresent()) {
             Employer employer = (Employer) optEmployer.get();
             model.addAttribute("employer", employer);
