@@ -16,7 +16,7 @@ public abstract class AbstractEntity {
     @GeneratedValue
     private int id;
 
-    @NotNull(message = "abstract entity error")
+    @NotNull
     @Size(min=3, max=50)
     private String name;
 

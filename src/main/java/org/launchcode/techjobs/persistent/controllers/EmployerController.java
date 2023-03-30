@@ -19,12 +19,9 @@ public class EmployerController {
     @Autowired
     private EmployerRepository employerRepository;
 
-    @GetMapping("")
+    @RequestMapping("")
     public String index(Model model) {
-        Iterable<Employer> employers;
-        employers = employerRepository.findAll();
-        model.addAttribute("title", "All Employers");
-        model.addAttribute("employers", employers);
+        model.addAttribute("employers", employerRepository.findAll());
         return "employers/index";
     }
 
